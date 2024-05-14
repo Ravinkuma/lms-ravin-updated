@@ -44,25 +44,7 @@ public class MemberService {
 		mr.deleteById(id);
 		return "Member with Id "+ id+ " is removed from table";
 	}
-	public String findMember(Integer Id, Integer bookId ) {
-		// check member is registered or not 
-		Optional<MemberEntity> m=mr.findById(Id);
-		if(m.isEmpty()) {
-			throw new MemberNotReisteredException("member with id "+Id+" is not registerd");
-		}
-		MemberEntity me = new MemberEntity();
-		me.setContact(null);
-		me.setMemberId(null);
-		me.setName(null);
-		mr.save(me);
-		// update book quantity
-		int quantityUpdated = mr.updateBookQuantity(Id);
-		if(quantityUpdated>0) {
-		return "Book borrowed successfully";
-		} else {
-			return "Book could not borrowed";
-		}
-	}
+	
 
 	
 }

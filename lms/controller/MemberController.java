@@ -51,15 +51,4 @@ String delete(@PathVariable int id){
 	return ms.delete(id);
 }
 
-@PatchMapping("/patch/{Id}/{bookId}")
-ResponseEntity<Object> findMember(@PathVariable Integer Id, @PathVariable Integer bookId){
-	String message = "";
-	try {
-		message=ms.findMember(Id, bookId);
-	}catch(MemberNotReisteredException e) {
-		return ResponseEntity.status(HttpStatus.NOT_FOUND).body("member with id "+Id+" is not registerd");
-	}
-	return ResponseEntity.status(HttpStatus.OK).body(message);
-	
-}
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lms.entity.BorrowEntity;
 import com.lms.exceptions.BookNotAvailableException;
+import com.lms.exceptions.MemberNotReisteredException;
 import com.lms.sevice.BorrowService;
 
 @RestController
@@ -61,4 +62,20 @@ public class BorrowController {
 		return ResponseEntity.status(HttpStatus.OK).body(message);
 		
 	}
-}
+	@PatchMapping("/patch/{memberId}/{bookId}")
+	ResponseEntity<Object> findMember(@PathVariable Integer memberId, @PathVariable Integer bookId){
+		String message = "";
+		try {
+			message=brs.findMember(memberId, bookId);
+		}catch(MemberNotReisteredException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("member with id "+memberId+" is not registerd");
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(message);
+		
+	}
+	@PatchMapping("/return/{bookId}/{memberId}")
+	public String returnBook(@PathVariable int bookId, @PathVariable int memberId) {
+	    return brs.returnBook(bookId, memberId);
+	}
+	}
+
