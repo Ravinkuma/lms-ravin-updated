@@ -21,8 +21,8 @@ public class MemberEntity {
 	private String name;
 	    @Column(name = "Contact")
 	private String contact;
-	    @Column(name = "MemberId")
-	    private String memberId;
+	    //@Column(name = "MemberId")
+	    //private int memberId;
 		public int getId() {
 			return id;
 		}
@@ -41,12 +41,12 @@ public class MemberEntity {
 		public void setContact(String contact) {
 			this.contact = contact;
 		}
-		public String getMemberId() {
-			return memberId;
-		}
-		public void setMemberId(String memberId) {
-			this.memberId = memberId;
-		}
+		//public int getMemberId() {
+		//	return memberId;
+		//}
+		//public void setMemberId(int memberId) {
+		//	this.memberId = memberId;
+		//}
 	    
 	    
 }

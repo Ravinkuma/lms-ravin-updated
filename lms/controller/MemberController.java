@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lms.entity.MemberEntity;
 import com.lms.exceptions.BookNotAvailableException;
-import com.lms.exceptions.MemberNotReisteredException;
+
 import com.lms.sevice.MemberService;
 
 @RestController
@@ -41,10 +41,10 @@ MemberEntity retrieveOneMember(@PathVariable int id){
 	return ms.retrieveOneMember(id);
 }
 
-@PutMapping("/update/{id}")
-public MemberEntity updateMember(@PathVariable int id, @RequestBody MemberEntity memberEntity) {
-    return ms.updateMember(id, memberEntity);
-}
+//@PutMapping("/update/{id}")
+//public MemberEntity updateMember(@PathVariable int id, @RequestBody MemberEntity memberEntity) {
+  //  return ms.updateMember(id, memberEntity);
+//}
 
 @DeleteMapping("/delete/{id}")
 String delete(@PathVariable int id){

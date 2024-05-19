@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.lms.entity.BorrowEntity;
 import com.lms.exceptions.BookNotAvailableException;
-import com.lms.exceptions.MemberNotReisteredException;
+import com.lms.exception2.BookNotIsuedException;
+import com.lms.exception2.MemberNotRegisteredException;
 import com.lms.sevice.BorrowService;
 
 @RestController
@@ -62,20 +63,27 @@ public class BorrowController {
 		return ResponseEntity.status(HttpStatus.OK).body(message);
 		
 	}
-	@PatchMapping("/patch/{memberId}/{bookId}")
-	ResponseEntity<Object> findMember(@PathVariable Integer memberId, @PathVariable Integer bookId){
+	@PatchMapping("/borrow2/{bookId}/{Id}")
+	ResponseEntity<Object> findMember(@PathVariable Integer bookId, @PathVariable Integer Id){
 		String message = "";
 		try {
-			message=brs.findMember(memberId, bookId);
-		}catch(MemberNotReisteredException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("member with id "+memberId+" is not registerd");
+			message=brs.findMember(bookId, Id);
+		}catch(com.lms.exception2.MemberNotRegisteredException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("member with Id "+Id+" is not registerd");
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(message);
 		
 	}
-	@PatchMapping("/return/{bookId}/{memberId}")
-	public String returnBook(@PathVariable int bookId, @PathVariable int memberId) {
-	    return brs.returnBook(bookId, memberId);
+	@PatchMapping("/return/{bookId}/{Id}")
+	ResponseEntity<Object> returnBook(@PathVariable Integer bookId, @PathVariable Integer Id){
+		String message = "";
+		try {
+			message=brs.returnBook(bookId, Id);
+		}catch(com.lms.exception2.BookNotIsuedException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("book with bookId "+bookId+" not taken by memeber with id "+Id);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(message);
+		
 	}
 	}
 

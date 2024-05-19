@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import com.lms.entity.BookEntity;
 import com.lms.entity.BorrowEntity;
 import com.lms.exceptions.BookNotAvailableException;
-import com.lms.exceptions.MemberNotReisteredException;
+import com.lms.exception2.MemberNotRegisteredException;
 import com.lms.repo.BookRepo;
 import com.lms.repo.BorrowRepo;
 
@@ -18,11 +18,9 @@ import com.lms.repo.BorrowRepo;
 public class BorrowService {
 	@Autowired
 	 
-	 BorrowRepo brr;
+	BorrowRepo brr;
 	@Autowired
 	BookRepo br;
-	//@Autowired
-	//MemberRepo mr;
 	 public String saveBorrowingDetails(BorrowEntity borrowEntity) {
 	     brr.save(borrowEntity);
 	     return "Borrowing Details saved successfully";
@@ -69,41 +67,42 @@ public class BorrowService {
 				return "Book could not borrowed";
 			}
 		}
-		public String findMember(Integer memberId, Integer bookId ) {
+		public String findMember(Integer bookId, Integer Id ) {
 			// check member is registered or not 
-			Optional<BorrowEntity> b=brr.findById(memberId);
-			if(b.isEmpty()) {
-				throw new MemberNotReisteredException("member with id "+memberId+" is not registerd");
+			Optional<BorrowEntity> be=brr.findById(Id);
+			if(be.isEmpty()) {
+				throw new com.lms.exception2.MemberNotRegisteredException("member with Id "+Id+" not registerd");
 			}
-			BorrowEntity be = new BorrowEntity();
-			be.setBookId(bookId);
-			be.setBorrowDate(new Date());
-			be.setReturnDate(new Date());
-			be.setMemberId(memberId);
-			brr.save(be);
+			BorrowEntity bee = new BorrowEntity();
+			bee.setBookId(bookId);
+			bee.setBorrowDate(new Date());
+			brr.save(bee);
 			// update book quantity
-			int quantityUpdated = brr.updateBookQuantity1(memberId);
+			int quantityUpdated = brr.updateBookQuantity(bookId);
 			if(quantityUpdated>0) {
 			return "Book borrowed successfully";
 			} else {
 				return "Book could not borrowed";
 			}
 		}
-		public String returnBook(Integer bookId, Integer memberId) {
-			
-			//return a book
-			BorrowEntity be = new BorrowEntity();
-			be.setBookId(bookId);
-			be.setMemberId(memberId);
-			be.setBorrowDate(new Date());
-			be.setReturnDate(new Date());		
-			brr.save(be);
-			// update book quantity
-			int quantityUpdated = brr.increaseBookQuantity(bookId);
-			if(quantityUpdated>0) {
-			return "Book return successfully";
-			} else {
-				return "Book could not returned";
-			}
-		}
+		 
+		public String returnBook(Integer bookId, Integer Id) {
+			 Optional<BorrowEntity> b2= brr.findById(Id);
+			 if(b2.isEmpty()) {
+				 throw new com.lms.exception2.BookNotIsuedException("book with bookId "+bookId+" not taken by memeber with id "+Id);
+			 } 
+			 BorrowEntity be = new BorrowEntity();
+				be.setBookId(bookId);
+				be.setBorrowDate(new Date());
+				be.setReturnDate(new Date());
+				brr.save(be);
+				// update book quantity
+				int quantityUpdated = brr.updateBookQuantity(bookId);//br... in book repo
+				if(quantityUpdated>0) {
+				return "Book returned successfully";
+				} else {
+					return "Book could not returned";
+				}
+		 }
+		
 }

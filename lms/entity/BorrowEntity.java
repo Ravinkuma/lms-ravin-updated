@@ -22,7 +22,7 @@ public class BorrowEntity {
 	private int id;
 	@Column
 	private int bookId;
-	@Column
+	@Column(name="memberId")
 	private int memberId;
 	@Column
 	private Date borrowDate;
