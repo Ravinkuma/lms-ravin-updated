@@ -74,16 +74,17 @@ public class BorrowController {
 		return ResponseEntity.status(HttpStatus.OK).body(message);
 		
 	}
-	@PatchMapping("/return/{bookId}/{Id}")
-	ResponseEntity<Object> returnBook(@PathVariable Integer bookId, @PathVariable Integer Id){
+	@PutMapping("/return/{bookId}/{memberId}")
+	ResponseEntity<Object> returnBook(@PathVariable Integer bookId, @PathVariable Integer memberId){
 		String message = "";
 		try {
-			message=brs.returnBook(bookId, Id);
+			message=brs.returnBook(bookId, memberId);
 		}catch(com.lms.exception2.BookNotIsuedException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("book with bookId "+bookId+" not taken by memeber with id "+Id);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("book with book id "+bookId+" is not borrowed by member ");
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(message);
 		
 	}
+	
 	}
 

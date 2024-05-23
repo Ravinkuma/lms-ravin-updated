@@ -60,7 +60,7 @@ public class BorrowService {
 			be.setBorrowDate(new Date());
 			brr.save(be);
 			// update book quantity
-			int quantityUpdated = brr.updateBookQuantity(bookId);
+			int quantityUpdated = br.updateBookQuantity(bookId);
 			if(quantityUpdated>0) {
 			return "Book borrowed successfully";
 			} else {
@@ -76,6 +76,7 @@ public class BorrowService {
 			BorrowEntity bee = new BorrowEntity();
 			bee.setBookId(bookId);
 			bee.setBorrowDate(new Date());
+			//bee.setMemberId(memberId);
 			brr.save(bee);
 			// update book quantity
 			int quantityUpdated = brr.updateBookQuantity(bookId);
@@ -85,24 +86,27 @@ public class BorrowService {
 				return "Book could not borrowed";
 			}
 		}
-		 
-		public String returnBook(Integer bookId, Integer Id) {
-			 Optional<BorrowEntity> b2= brr.findById(Id);
-			 if(b2.isEmpty()) {
-				 throw new com.lms.exception2.BookNotIsuedException("book with bookId "+bookId+" not taken by memeber with id "+Id);
-			 } 
-			 BorrowEntity be = new BorrowEntity();
-				be.setBookId(bookId);
-				be.setBorrowDate(new Date());
-				be.setReturnDate(new Date());
-				brr.save(be);
-				// update book quantity
-				int quantityUpdated = brr.updateBookQuantity(bookId);//br... in book repo
-				if(quantityUpdated>0) {
-				return "Book returned successfully";
-				} else {
-					return "Book could not returned";
-				}
-		 }
+
+		public String returnBook(Integer bookId, Integer memberId) {
+			BorrowEntity bee = new BorrowEntity();
+			bee.setBookId(bookId);
+			bee.setBorrowDate(new Date());
+			bee.setReturnDate(new Date());
+			bee.setMemberId(memberId);
+			brr.save(bee);
+			// check book is issued by librarian or not
+			int bookCount=brr.checkBookWasBorrowed(bookId,memberId);
+			if(bookCount>0) {
+				//update return date 
+				brr.updateReturnDate(bookId, memberId);
+				//update book table 
+				br.updateBookQuantity2(bookId);
+				return "book with bookId "+bookId+ " returned by member with memberId "+memberId; 
+			} else {
+			     return "book with bookId "+bookId+" not borrowed by member "+memberId;
+			}
+		}
 		
-}
+		}
+
+

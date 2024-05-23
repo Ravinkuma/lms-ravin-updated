@@ -11,11 +11,20 @@ import jakarta.transaction.Transactional;
 
 @Repository
 public interface BookRepo extends JpaRepository<BookEntity, Integer> {
+	@Transactional
+	@Modifying
+       @Query(value="update Book set quantity=quantity-1 where id=:bookId", nativeQuery=true)
+	   int updateBookQuantity(Integer bookId);
 
-	//@Transactional
-	//@Modifying
-	//@Query(value="update Book set quantity=quantity+1 where id=:bookId", nativeQuery=true)
-	//int updateBookQuantity(Integer bookId);
+@Transactional
+@Modifying
+@Query(value="update book set quantity=quantity+1 where id=:bookId", nativeQuery=true)
+	void updateBookQuantity2(Integer bookId);
+
+     
+	
+	
+
         
         
 
